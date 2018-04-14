@@ -72,7 +72,7 @@ async def go(ctx):
         playing = True
         board = Board([Player(str(i), i) for i in players])
         board.deal_all()
-        await bot.say("本局游戏共有{}人参加\n庄家为{}\n单注最低{}点\n轮到庄家行动".format(len(players), board.dealer, board.min))
+        await bot.say("本局游戏共有{}人参加\n庄家为{}\n单注最低{}点\n轮到庄家行动".format(len(players), board.dealer.user.mention, board.min))
         await bot.say("1. 放弃")
         await bot.say("2. 看牌")
         await bot.say("3. 加注")
@@ -89,11 +89,12 @@ async def move(ctx, option, addition=0):
         await client.send_message(ctx.message.author, "还没有轮到你")
     else:
         if option == 2:
-            await client.send_message(board.players[board.current].user, " ".join(board.players[board.current].see()))
+            await client.send_message(ctx.message.author, " ".join(board.players[board.current].see()))
             await bot.say("1. 放弃")
             await bot.say("3. 加注")
             await bot.say("4. 跟注")
             await bot.say("输入 $move 1-4 选择")
+            return
         if option == 1:
             board.players[board.current].pack()
         elif option == 3:
