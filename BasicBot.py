@@ -20,6 +20,7 @@ async def on_ready():
 @bot.command(pass_context=True)
 async def start(ctx):
     await bot.say("{} 想要开始游戏，输入$join加入".format(ctx.message.author.mention))
+    await bot.say("{} 想要开始游戏，输入$join加入".format(ctx.message.author.mention))
 
 
 @bot.command(pass_context=True)
