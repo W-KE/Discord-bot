@@ -45,7 +45,7 @@ async def join(ctx):
         await bot.say("游戏已经开始，等待下一局")
         return
     if ctx.message.author in players:
-        await client.send_message(ctx.message.author, "你已经在游戏中了，不要重复加入")
+        await bot.send_message(ctx.message.author, "你已经在游戏中了，不要重复加入")
     else:
         if preparing:
             global players
