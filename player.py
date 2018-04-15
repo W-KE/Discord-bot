@@ -15,7 +15,7 @@ class Player:
 
     def see(self):
         self.state = 1
-        return self.hand
+        return [str(i) for i in self.hand]
 
     def pack(self):
         self.state = 2
