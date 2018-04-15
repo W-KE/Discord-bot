@@ -10,6 +10,6 @@ class Card:
         return self.num == other.num
 
     def __repr__(self):
-        kinds = ["S", "H", "C", "D"]
+        kinds = ["黑桃", "红桃", "梅花", "方块"]
         nums = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"]
         return kinds[self.kind] + nums[self.num]
