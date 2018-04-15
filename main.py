@@ -72,11 +72,10 @@ async def go(ctx):
         board = Board([Player(str(i), i) for i in players])
         board.deal_all()
         await bot.say("本局游戏共有{}人参加\n庄家为{}\n单注最低{}点\n轮到庄家行动".format(len(players), board.dealer.user.mention, board.min))
-        await bot.say("1. 放弃")
-        await bot.say("2. 看牌")
-        await bot.say("3. 加注")
-        await bot.say("4. 跟注")
-        await bot.say("输入 $move 1-4 选择")
+        if len(players) == 2:
+            await bot.say("1. 放弃\n2. 看牌\n3. 加注\n4. 跟注\n5. 开牌\n输入 $move 1-5 选择")
+        else:
+            await bot.say("1. 放弃\n2. 看牌\n3. 加注\n4. 跟注\n输入 $move 1-4 选择")
 
 
 @bot.command(pass_context=True)
@@ -92,10 +91,10 @@ async def move(ctx, option, addition=0):
     else:
         if option == "2":
             await bot.send_message(ctx.message.author, " ".join(board.players[board.current].see()))
-            await bot.say("1. 放弃")
-            await bot.say("3. 加注")
-            await bot.say("4. 跟注")
-            await bot.say("输入 $move 1-4 选择")
+            if len(players) == 2:
+                await bot.say("1. 放弃\n3. 加注\n4. 跟注\n5. 开牌\n输入 $move 1-5 选择")
+            else:
+                await bot.say("1. 放弃\n3. 加注\n4. 跟注\n输入 $move 1-4 选择")
         else:
             if option == "1":
                 board.players[board.current].pack()
@@ -105,9 +104,33 @@ async def move(ctx, option, addition=0):
                 board.players[board.current].chips -= addition
                 board.chips += addition
                 board.current_chips = addition
+                await bot.say("{} 加注至{}点".format(board.players[board.current].user.mention, board.current_chips))
             elif option == "4":
                 board.players[board.current].chips -= board.current_chips
                 board.chips += board.current_chips
+                await bot.say("{} 跟注{}点".format(board.players[board.current].user.mention, board.current_chips))
+            elif option == "5":
+                for i in board.players:
+                    await bot.say("{} 分数:{} {}".format(i.user.mention, i.get_score(), i.hand))
+                winner = board.check()
+                global playing
+                playing = False
+                kind = winner.get_type()
+                if kind == 100000:
+                    kind = "豹子"
+                elif kind == 10000:
+                    kind = "同花顺"
+                elif kind == 1000:
+                    kind = "金花"
+                elif kind == 100:
+                    kind = "顺子"
+                elif kind == 10:
+                    kind = "对子"
+                else:
+                    kind = "散牌"
+                await bot.say("{} {}获胜".format(winner.user.mention, kind))
+                playing = False
+                return
             board.current += 1
             board.current %= len(board.players)
             while board.players[board.current].state == 2:
@@ -119,24 +142,23 @@ async def move(ctx, option, addition=0):
                     count += 1
             if board.chips >= board.max or count < 2:
                 for i in board.players:
-                    await bot.say("{} {} {}".format(i.user.mention, i.get_score(), i.hand))
+                    await bot.say("{} 分数:{} {}".format(i.user.mention, i.get_score(), i.hand))
                 winner = board.check()
                 global playing
                 playing = False
                 await bot.say("{} 获胜".format(winner.user.mention))
             else:
                 await bot.say("轮到 {} 输入 $move 行动".format(board.players[board.current].user.mention))
-                await bot.say("1. 放弃")
-                await bot.say("2. 看牌")
-                await bot.say("3. 加注")
-                await bot.say("4. 跟注")
-                await bot.say("输入 $move 1-4 选择")
+                if len(players) == 2:
+                    await bot.say("1. 放弃\n2. 看牌\n3. 加注\n4. 跟注\n5. 开牌\n输入 $move 1-5 选择")
+                else:
+                    await bot.say("1. 放弃\n2. 看牌\n3. 加注\n4. 跟注\n输入 $move 1-4 选择")
 
 
 @bot.group(pass_context=True)
 async def cool(ctx):
-    """Says if a user is cool.
-
+    """
+    Says if a user is cool.
     In reality this just checks if a subcommand is being invoked.
     """
     if ctx.invoked_subcommand is None:
