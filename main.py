@@ -10,7 +10,6 @@ module.
 
 There are a number of utility commands being showcased here.'''
 bot = commands.Bot(command_prefix='$', description=description)
-client = discord.Client()
 owner = None
 preparing = False
 playing = False
@@ -45,7 +44,7 @@ async def join(ctx):
         await bot.say("游戏已经开始，等待下一局")
         return
     if ctx.message.author in players:
-        await bot.send_message(ctx.message.author, "你已经在游戏中了，不要重复加入")
+        await bot.say("你已经在游戏中了，不要重复加入")
     else:
         if preparing:
             global players
@@ -83,13 +82,13 @@ async def go(ctx):
 @bot.command(pass_context=True)
 async def move(ctx, option, addition=0):
     if ctx.message.author not in players:
-        await client.send_message(ctx.message.author, "你不在游戏中")
+        await bot.say("你不在游戏中")
         return
     if ctx.message.author != board.players[board.current].user:
-        await client.send_message(ctx.message.author, "还没有轮到你")
+        await bot.say("还没有轮到你")
     else:
         if option == 2:
-            await client.send_message(ctx.message.author, " ".join(board.players[board.current].see()))
+            await bot.send_message(ctx.message.author, " ".join(board.players[board.current].see()))
             await bot.say("1. 放弃")
             await bot.say("3. 加注")
             await bot.say("4. 跟注")
