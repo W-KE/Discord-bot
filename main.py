@@ -90,22 +90,22 @@ async def move(ctx, option, addition=0):
     if ctx.message.author != board.players[board.current].user:
         await bot.say("还没有轮到你")
     else:
-        if option == 2:
+        if option == "2":
             await bot.send_message(ctx.message.author, " ".join(board.players[board.current].see()))
             await bot.say("1. 放弃")
             await bot.say("3. 加注")
             await bot.say("4. 跟注")
             await bot.say("输入 $move 1-4 选择")
         else:
-            if option == 1:
+            if option == "1":
                 board.players[board.current].pack()
-            elif option == 3:
+            elif option == "3":
                 if addition < board.current_chips:
                     addition = board.current_chips
                 board.players[board.current].chips -= addition
                 board.chips += addition
                 board.current_chips = addition
-            elif option == 4:
+            elif option == "4":
                 board.players[board.current].chips -= board.current_chips
                 board.chips += board.current_chips
             board.current += 1
