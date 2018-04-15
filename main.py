@@ -119,7 +119,7 @@ async def move(ctx, option, addition=0):
                     count += 1
             if board.chips >= board.max or count < 2:
                 for i in board.players:
-                    await bot.say("".format(i.user.mention, i.get_score(), i.hand))
+                    await bot.say("{} {} {}".format(i.user.mention, i.get_score(), i.hand))
                 winner = board.check()
                 global playing
                 playing = False
