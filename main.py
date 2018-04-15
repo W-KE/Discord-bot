@@ -81,6 +81,9 @@ async def go(ctx):
 
 @bot.command(pass_context=True)
 async def move(ctx, option, addition=0):
+    if preparing:
+        await bot.say("游戏还没有开始")
+        return
     if ctx.message.author not in players:
         await bot.say("你不在游戏中")
         return
