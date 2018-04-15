@@ -96,41 +96,41 @@ async def move(ctx, option, addition=0):
             await bot.say("3. 加注")
             await bot.say("4. 跟注")
             await bot.say("输入 $move 1-4 选择")
-            return
-        if option == 1:
-            board.players[board.current].pack()
-        elif option == 3:
-            if addition < board.current_chips:
-                addition = board.current_chips
-            board.players[board.current].chips -= addition
-            board.chips += addition
-            board.current_chips = addition
-        elif option == 4:
-            board.players[board.current].chips -= board.current_chips
-            board.chips += board.current_chips
-        board.current += 1
-        board.current %= len(board.players)
-        while board.players[board.current].state == 2:
+        else:
+            if option == 1:
+                board.players[board.current].pack()
+            elif option == 3:
+                if addition < board.current_chips:
+                    addition = board.current_chips
+                board.players[board.current].chips -= addition
+                board.chips += addition
+                board.current_chips = addition
+            elif option == 4:
+                board.players[board.current].chips -= board.current_chips
+                board.chips += board.current_chips
             board.current += 1
             board.current %= len(board.players)
-        count = 0
-        for player in board.players:
-            if player.state != 2:
-                count += 1
-        if board.chips >= board.max or count < 2:
-            for i in board.players:
-                await bot.say(i.user.mention, i.get_score(), i.hand)
-            winner = board.check()
-            global playing
-            playing = False
-            await bot.say("{} 获胜".format(winner.user.mention))
-        else:
-            await bot.say("轮到 {} 输入 $move 行动".format(board.players[board.current].user.mention))
-            await bot.say("1. 放弃")
-            await bot.say("2. 看牌")
-            await bot.say("3. 加注")
-            await bot.say("4. 跟注")
-            await bot.say("输入 $move 1-4 选择")
+            while board.players[board.current].state == 2:
+                board.current += 1
+                board.current %= len(board.players)
+            count = 0
+            for player in board.players:
+                if player.state != 2:
+                    count += 1
+            if board.chips >= board.max or count < 2:
+                for i in board.players:
+                    await bot.say(i.user.mention, i.get_score(), i.hand)
+                winner = board.check()
+                global playing
+                playing = False
+                await bot.say("{} 获胜".format(winner.user.mention))
+            else:
+                await bot.say("轮到 {} 输入 $move 行动".format(board.players[board.current].user.mention))
+                await bot.say("1. 放弃")
+                await bot.say("2. 看牌")
+                await bot.say("3. 加注")
+                await bot.say("4. 跟注")
+                await bot.say("输入 $move 1-4 选择")
 
 
 @bot.group(pass_context=True)
