@@ -36,6 +36,7 @@ class Board:
         for i in range(3):
             for player in self.players:
                 self.deal(player)
+        print("Cards left {}".format(len(self.cards)))
         for player in self.players:
             self.chips += self.min
             player.chips -= self.min
